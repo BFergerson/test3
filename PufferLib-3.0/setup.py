@@ -272,11 +272,11 @@ for key, value in cfg_vars.items():
 
 install_requires = [
     'setuptools',
-    # 'numpy<2.0',
-    # 'shimmy[gym-v21]',
-    # 'gym==0.23',
-    # 'gymnasium>=0.29.1',
-    # 'pettingzoo>=1.24.1',
+    'numpy<2.0',
+    'shimmy[gym-v21]',
+    'gym==0.23',
+    'gymnasium>=0.29.1',
+    'pettingzoo>=1.24.1',
 ]
 
 # if not NO_TRAIN:
