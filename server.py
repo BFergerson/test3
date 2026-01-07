@@ -395,7 +395,7 @@ if __name__ == "__main__":
     if os.getenv("MB_VIEWER") == "true":
         from flask import Flask, send_from_directory
 
-        app = Flask(__name__)
+        app = Flask(__name__, static_folder="games/nmmo3")
 
 
         @app.route("/")
@@ -403,8 +403,14 @@ if __name__ == "__main__":
             return send_from_directory("games/nmmo3", "game.html")
 
 
+        @app.route("/<path:filename>")
+        def static_files(filename):
+            return send_from_directory("games/nmmo3", filename)
+
+
         if __name__ == "__main__":
             app.run(host="0.0.0.0", port=8080)
+
 
     else:
         asyncio.run(main())
