@@ -20,7 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # (Optional) If server.py listens on a port, document it
- EXPOSE 80
+EXPOSE 80
 
 # Run the server
 CMD ["python", "server.py"]
