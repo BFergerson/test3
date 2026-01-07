@@ -2,7 +2,7 @@ name: Build & Push Docker image to DOCR
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
 
 env:
