@@ -592,8 +592,8 @@ static void parse_ticks_into_env(MMO *env, uint8_t *rxbuf, size_t *rxlen_io) {
     *rxlen_io = remain;
 }
 
-#define DEFAULT_HOST "localhost"
-#define DEFAULT_PORT "8888"
+#define DEFAULT_HOST "app.microbrew.ai"
+#define DEFAULT_PORT "443"
 
 /* A small ring-ish buffer for TCP stream parsing */
 #define RX_CAP (1u << 20) /* 1 MiB should be plenty for small maps */
@@ -865,7 +865,7 @@ int main2(int argc, char **argv) {
     v->state = VIEWER_WS_WAIT_HEADER;
 
     char url[256];
-    snprintf(url, sizeof(url), "ws://%s:%s", host, port);
+    snprintf(url, sizeof(url), "wss://%s:%s", host, port);
 
     EmscriptenWebSocketCreateAttributes attr;
     emscripten_websocket_init_create_attributes(&attr);

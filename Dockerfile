@@ -19,6 +19,8 @@ COPY requirements.txt .
 # Install Python deps into a separate prefix so we can copy them cleanly
 RUN pip install --prefix=/install -r requirements.txt
 
+RUN cd PufferLib-3.0 && scripts/build_ocean.sh nmmo3 web
+
 # ---------- Stage 2: runtime image ----------
 FROM python:3.12-slim
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Usage: ./build_env.sh pong [local|fast|web]
 
@@ -51,10 +52,13 @@ if [ "$MODE" = "web" ]; then
         --shell-file ./scripts/minshell.html \
         -sINITIAL_MEMORY=512MB \
         -sALLOW_MEMORY_GROWTH \
-        -sSTACK_SIZE=512KB \
+        -D_TIME_BITS=64 \
+        -D_FILE_OFFSET_BITS=64 \
+        -s ERROR_ON_UNDEFINED_SYMBOLS=0 \
         -DNDEBUG \
         -DPLATFORM_WEB \
         -DGRAPHICS_API_OPENGL_ES3 \
+        -lwebsocket.js \
         --preload-file pufferlib/resources/$1@resources/$1 \
         --preload-file pufferlib/resources/shared@resources/shared 
     echo "Web build completed: $WEB_OUTPUT_DIR/game.html"

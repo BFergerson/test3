@@ -395,17 +395,17 @@ if __name__ == "__main__":
     if os.getenv("MB_VIEWER") == "true":
         from flask import Flask, send_from_directory
 
-        app = Flask(__name__, static_folder="games/nmmo3")
+        app = Flask(__name__, static_folder="PufferLib-3.0/build_web/nmmo3")
 
 
         @app.route("/")
         def index():
-            return send_from_directory("games/nmmo3", "game.html")
+            return send_from_directory("PufferLib-3.0/build_web/nmmo3", "game.html")
 
 
         @app.route("/<path:filename>")
         def static_files(filename):
-            return send_from_directory("games/nmmo3", filename)
+            return send_from_directory("PufferLib-3.0/build_web/nmmo3", filename)
 
 
         if __name__ == "__main__":
