@@ -9,33 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
  && rm -rf /var/lib/apt/lists/*
 
-RUN set -eux; \
-    echo "==== Disk usage BEFORE cleanup ===="; \
-    df -h; \
-    echo "Top 10 largest directories BEFORE cleanup:"; \
-    du -xh / 2>/dev/null | sort -h | tail -n 10; \
-    \
-    if command -v apt-get >/dev/null 2>&1; then \
-      apt-get clean || true; \
-      rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /var/cache/apt/* || true; \
-    fi; \
-    \
-    if command -v pip >/dev/null 2>&1; then \
-      pip cache purge || true; \
-    fi; \
-    rm -rf /root/.cache/pip /root/.cache/pip-tools || true; \
-    \
-    for d in /tmp /var/tmp /var/cache /root/.cache; do \
-      if [ -d "$d" ]; then \
-        rm -rf "${d:?}/"* "$d"/.[!.]* "$d"/..?* 2>/dev/null || true; \
-      fi; \
-    done; \
-    sync || true; \
-    \
-    echo "==== Disk usage AFTER cleanup ===="; \
-    df -h; \
-    echo "Top 10 largest directories AFTER cleanup:"; \
-    du -xh / 2>/dev/null | sort -h | tail -n 10
+RUN df -h && du -xh / 2>/dev/null | sort -h | tail -n 10;
 
 # Install Python dependencies
 COPY PufferLib-3.0 ./PufferLib-3.0
