@@ -262,7 +262,7 @@ class Producer(threading.Thread):
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument("--bind", default="0.0.0.0")
-    ap.add_argument("--ws-port", type=int, default=8888)
+    ap.add_argument("--ws-port", type=int, default=80)
     ap.add_argument("--tick-hz", type=float, default=1.0)
 
     ap.add_argument("--width", type=int, default=30)
@@ -366,7 +366,7 @@ async def main() -> None:
         compression=None,
         origins=None,
     )
-    port = int(os.getenv('PORT', 80))
+    port = 81
     tcp_server = await asyncio.start_server(
         tcp_handler,
         args.bind,
