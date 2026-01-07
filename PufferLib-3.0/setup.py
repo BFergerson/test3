@@ -236,26 +236,26 @@ if not NO_OCEAN:
 
 # Check if CUDA compiler is available. You need cuda dev, not just runtime.
 torch_extensions = []
-# if not NO_TRAIN:
-#     torch_sources = [
-#         "pufferlib/extensions/pufferlib.cpp",
-#     ]
-#     if BUID_CUDA_EXT:
-#         extension = CUDAExtension
-#         torch_sources.append("pufferlib/extensions/cuda/pufferlib.cu")
-#     else:
-#         extension = CppExtension
-#
-#     torch_extensions = [
-#        extension(
-#             "pufferlib._C",
-#             torch_sources,
-#             extra_compile_args = {
-#                 "cxx": cxx_args,
-#                 "nvcc": nvcc_args,
-#             }
-#         ),
-#     ]
+if not NO_TRAIN:
+    torch_sources = [
+        "pufferlib/extensions/pufferlib.cpp",
+    ]
+    if BUID_CUDA_EXT:
+        extension = CUDAExtension
+        torch_sources.append("pufferlib/extensions/cuda/pufferlib.cu")
+    else:
+        extension = CppExtension
+
+    torch_extensions = [
+       extension(
+            "pufferlib._C",
+            torch_sources,
+            extra_compile_args = {
+                "cxx": cxx_args,
+                "nvcc": nvcc_args,
+            }
+        ),
+    ]
 
 # Prevent Conda from injecting garbage compile flags
 from distutils.sysconfig import get_config_vars
@@ -279,20 +279,20 @@ install_requires = [
     'pettingzoo>=1.24.1',
 ]
 
-# if not NO_TRAIN:
-#     install_requires += [
-#         'torch',
-#         'psutil',
-#         'nvidia-ml-py',
-#         'rich',
-#         'rich_argparse',
-#         'imageio',
-#         'gpytorch',
-#         'scikit-learn',
-#         'heavyball>=2.2.0', # contains relevant fixes compared to 1.7.2 and 2.1.1
-#         'neptune',
-#         'wandb',
-#     ]
+if not NO_TRAIN:
+    install_requires += [
+        'torch',
+        'psutil',
+        'nvidia-ml-py',
+        'rich',
+        'rich_argparse',
+        'imageio',
+        'gpytorch',
+        'scikit-learn',
+        'heavyball>=2.2.0', # contains relevant fixes compared to 1.7.2 and 2.1.1
+        'neptune',
+        'wandb',
+    ]
 
 setup(
     version="3.0.0",
