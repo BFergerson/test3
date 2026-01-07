@@ -3,7 +3,7 @@ spec:
   services:
   - environment_slug: python
     git:
-      branch: main
+      branch: master
       repo_clone_url: https://github.com/bfergerson/test3.git
     instance_count: 1
     instance_size_slug: apps-s-1vcpu-0.5gb
