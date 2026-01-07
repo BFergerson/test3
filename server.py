@@ -262,7 +262,7 @@ class Producer(threading.Thread):
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument("--bind", default="0.0.0.0")
-    ap.add_argument("--ws-port", type=int, default=80)
+    ap.add_argument("--ws-port", type=int, default=8080)
     ap.add_argument("--tick-hz", type=float, default=1.0)
 
     ap.add_argument("--width", type=int, default=30)
