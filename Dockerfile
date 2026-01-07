@@ -9,10 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
  && rm -rf /var/lib/apt/lists/*
 
-# Copy only requirements first so this layer can be cached
-COPY requirements.txt .
-
 # Install Python dependencies
+COPY PufferLib-3.0 ./PufferLib-3.0
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the app
