@@ -285,7 +285,7 @@ async def main() -> None:
     )
 
     env = NMMOEnv(cfg)
-    hub = BroadcastHaub()
+    hub = BroadcastHub()
 
     map_packet = build_map_packet(env.env_id)
 
