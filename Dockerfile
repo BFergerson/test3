@@ -20,7 +20,7 @@ RUN df -h && du -xh / 2>/dev/null | sort -h | tail -n 10
 # Install Python dependencies into a separate prefix so we can copy them later
 COPY PufferLib-3.0 ./PufferLib-3.0
 COPY requirements.txt .
-#RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Copy the rest of the app source (tests, server, etc.)
 COPY . .
