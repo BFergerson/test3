@@ -1,45 +1,43 @@
-# This is a multi-stage Dockerfile for running a Python app.
-# Stage 1 installs system build tools and Python dependencies.
-# Stage 2 copies only the installed dependencies and app code into a slim runtime image.
-
-# -- Stage 1 -- #
-# Build / install dependencies.
+# ---------- Stage 1: build dependencies (including PufferLib) ----------
 FROM python:3.12-slim AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Install system deps needed to build some Python packages
+# System deps needed for compiling native extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    python3-dev \
  && rm -rf /var/lib/apt/lists/*
 
-# Debug image size / contents (optional; runs at build time only)
-RUN df -h && du -xh / 2>/dev/null | sort -h | tail -n 10
+# Upgrade pip/tools
+RUN pip install --upgrade pip
 
-# Install Python dependencies into a separate prefix so we can copy them later
+# Copy only what we need to resolve / build deps
+# PufferLib is installed via "-e ./PufferLib-3.0" in requirements.txt
 COPY PufferLib-3.0 ./PufferLib-3.0
 COPY requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-# Copy the rest of the app source (tests, server, etc.)
-COPY . .
+# Install Python deps into a separate prefix so we can copy them cleanly
+RUN pip install --prefix=/install -r requirements.txt
 
-# -- Stage 2 -- #
-# Create the final runtime environment.
+# ---------- Stage 2: runtime image ----------
 FROM python:3.12-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy installed Python packages from the builder stage
+# Copy installed Python packages from builder
 COPY --from=builder /install /usr/local
 
-# Copy application code (you can narrow this down if needed)
+# If you need any *runtime* system libs, install them here
+# (most likely you don't need build-essential/python-dev at runtime)
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     <runtime-libs> \
+#  && rm -rf /var/lib/apt/lists/*
+
+# Copy the rest of the app
 COPY . .
 
-# If server.py listens on a port, document it
+# Your server binds to PORT env, default 80 in server.py
 EXPOSE 80
 
-# Run the server
 CMD ["python", "server.py"]
