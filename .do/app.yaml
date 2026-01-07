@@ -1,8 +1,0 @@
-name: sample-python
-services:
-- environment_slug: python
-  github:
-    branch: master
-    deploy_on_push: true
-    repo: bfergerson/test3
-  name: sample-python
