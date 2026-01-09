@@ -3204,6 +3204,36 @@ void process_command_input(Client *client, MMO *env) {
     DrawText(text, 10, 10, 20, BLACK);
 }
 
+
+// Present a render texture stretched to fill the entire window
+static inline void present_fill_window(RenderTexture2D src) {
+    int winW = GetScreenWidth();
+    int winH = GetScreenHeight();
+
+    // RenderTexture is upside-down in raylib: flip Y with negative height
+    Rectangle srcRect = { 0, 0, (float)src.texture.width, -(float)src.texture.height };
+    Rectangle dstRect = { 0.0f, 0.0f, (float)winW, (float)winH };
+
+    DrawTexturePro(src.texture, srcRect, dstRect, (Vector2){0,0}, 0.0f, WHITE);
+}
+
+// Present a fixed-size render texture centered in the (resizable) window.
+// The game is NOT scaled: it's drawn 1:1 and letterboxed with black.
+static inline void present_centered(RenderTexture2D src, int gameW, int gameH) {
+    int winW = GetScreenWidth();
+    int winH = GetScreenHeight();
+
+    int offX = (winW - gameW) / 2;
+    int offY = (winH - gameH) / 2;
+
+    // RenderTexture is upside-down in raylib: flip Y with negative height
+    Rectangle srcRect = { 0, 0, (float)src.texture.width, -(float)src.texture.height };
+    Rectangle dstRect = { (float)offX, (float)offY, (float)gameW, (float)gameH };
+
+    DrawTexturePro(src.texture, srcRect, dstRect, (Vector2){0,0}, 0.0f, WHITE);
+}
+
+
 int c_render(MMO *env) {
     if (env->client == NULL) {
         // Must reset before making client
@@ -3233,6 +3263,11 @@ int c_render(MMO *env) {
         client->command_mode = !client->command_mode;
         GetCharPressed(); // clear tilde key
     }
+
+    // ---- Render the game at a fixed size to a render texture ----
+    BeginTextureMode(client->ui_buffer);
+    ClearBackground(BLACK);
+
     if (client->render_mode == RENDER_MODE_FIXED) {
         if (!client->command_mode) {
             process_fixed_input(client);
