@@ -2475,6 +2475,7 @@ void render_conversion(char *flat_tiles, int *flat_converted, int R, int C) {
 }
 
 Client *make_client(MMO *env) {
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "NMMO3");
     SetTargetFPS(FRAME_RATE);
 
@@ -3204,7 +3205,6 @@ void process_command_input(Client *client, MMO *env) {
     DrawText(text, 10, 10, 20, BLACK);
 }
 
-
 // Present a render texture stretched to fill the entire window
 static inline void present_fill_window(RenderTexture2D src) {
     int winW = GetScreenWidth();
@@ -3234,6 +3234,8 @@ static inline void present_centered(RenderTexture2D src, int gameW, int gameH) {
 }
 
 
+
+
 int c_render(MMO *env) {
     if (env->client == NULL) {
         // Must reset before making client
@@ -3242,8 +3244,6 @@ int c_render(MMO *env) {
     Client *client = env->client;
     float delta = (float) client->frame / 36.0f;
 
-    BeginDrawing();
-    ClearBackground(BLANK);
     int action = 0;
 
     if (IsKeyDown(KEY_ESCAPE)) {
@@ -3296,7 +3296,7 @@ int c_render(MMO *env) {
         float dbg_font = 32; // bigger for visibility
         int pad = 12;
 
-        int sw = GetScreenWidth();
+        int sw = SCREEN_WIDTH;
         Vector2 dbg_sz = MeasureTextEx(client->font, dbg_txt, dbg_font, 1);
 
         int x = (sw - (int) dbg_sz.x) / 2;
@@ -3309,7 +3309,14 @@ int c_render(MMO *env) {
         DrawTextEx(client->font, dbg_txt, (Vector2){(float) x, (float) y}, dbg_font, 1, RAYWHITE);
     }
 
+    EndTextureMode();
+
+    // ---- Present centered, fixed size, black around ----
+    BeginDrawing();
+    ClearBackground(BLACK);
+    present_fill_window(client->ui_buffer);
     EndDrawing();
+
     client->frame += 1;
     if (client->frame >= 36) {
         client->frame = 0;
